@@ -1,6 +1,6 @@
 FROM buildpack-deps:buster
 
-# Instalacja zależności do kompilacji Redis i TCL
+# Instalacja zależności
 RUN apt-get update && apt-get install -y \
     tcl \
     build-essential \
@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install -y \
 # Utwórz katalog roboczy
 WORKDIR /app
 
-# Skopiuj wszystkie pliki aplikacji (w tym katalog tests) do kontenera
+# Skopiuj wszystkie pliki aplikacji (w tym katalogi tests i support) do kontenera
 COPY . /app
 
-# Skrypt uruchamiający Redis i testy
+# Uruchom Redis i testy
 CMD ["sh", "-c", "redis-server --daemonize yes && cd /app/tests && tclsh test_helper.tcl"]
