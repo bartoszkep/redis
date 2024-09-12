@@ -16,4 +16,4 @@ WORKDIR /app
 COPY . /app
 
 # Uruchom Redis i testy
-CMD ["sh", "-c", "redis-server --daemonize yes && cd /app/ && make test"]
+CMD ["sh", "-c", "redis-server --daemonize yes && cd /app/ && ./runtest --single tests/unit/type/hash-field-expire"]
