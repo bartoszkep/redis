@@ -5,4 +5,5 @@ RUN apt-get update && apt-get install -y \
     tcl \
     build-essential \
     autoconf \
-    libjemalloc-dev
+    libjemalloc-dev \
+    docker
