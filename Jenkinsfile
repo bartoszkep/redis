@@ -22,7 +22,7 @@ fi
           // Uruchomienie testów
           sh '''
 docker run --rm --link redis-server:redis builddependencies /bin/bash -c "
-cd /app/tests && tclsh test_helper.tcl"
+cd /app/ && make test"
 '''
 
           // Zatrzymanie Redis (w razie potrzeby, chociaż powinno być już zatrzymane przez usunięcie kontenera)
