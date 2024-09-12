@@ -1,35 +1,36 @@
 pipeline {
-    agent any
-    stages {
-        stage('Build') {
-            steps {
-                sh 'docker build -t builddependencies .'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                script {
-                    // Sprawdzenie, czy kontener o nazwie redis-server istnieje i usunięcie go, jeśli tak
-                    sh '''
-                    if [ "$(docker ps -aq -f name=redis-server)" ]; then
-                        docker rm -f redis-server
-                    fi
-                    '''
-
-                    // Uruchomienie Redis w tle
-                    sh 'docker run -d --name redis-server builddependencies redis-server'
-
-                    // Uruchomienie testów
-                    sh '''
-                    docker run --rm --link redis-server:redis builddependencies /bin/bash -c "
-                    cd /app/tests && tclsh test_helper.tcl"
-                    '''
-
-                    // Zatrzymanie Redis (w razie potrzeby, chociaż powinno być już zatrzymane przez usunięcie kontenera)
-                    sh 'docker stop redis-server || true'
-                }
-            }
-        }
+  agent any
+  stages {
+    stage('Build') {
+      steps {
+        sh 'docker build -t builddependencies .'
+      }
     }
+
+    stage('Test') {
+      steps {
+        script {
+          sh '''
+if [ "$(docker ps -aq -f name=redis-server)" ]; then
+docker rm -f redis-server
+fi
+'''
+
+          // Uruchomienie Redis w tle
+          sh 'docker run -d --name redis-server builddependencies redis-server'
+
+          // Uruchomienie testów
+          sh '''
+docker run --rm --link redis-server:redis builddependencies /bin/bash -c "
+cd /app/tests && tclsh test_helper.tcl"
+'''
+
+          // Zatrzymanie Redis (w razie potrzeby, chociaż powinno być już zatrzymane przez usunięcie kontenera)
+          sh 'docker stop redis-server || true'
+        }
+
+      }
+    }
+
+  }
 }
