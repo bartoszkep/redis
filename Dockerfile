@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     autoconf \
     libjemalloc-dev \
-    docker
+    docker \
+    git
 
 # Pobranie i kompilacja Redis
 RUN git clone https://github.com/redis/redis.git /app/redis
