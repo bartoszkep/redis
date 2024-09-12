@@ -1,3 +1,4 @@
+# Wybór obrazu bazowego
 FROM buildpack-deps:buster
 
 # Instalacja zależności
@@ -6,14 +7,20 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     autoconf \
     libjemalloc-dev \
-    docker \
-    redis-server
+    wget
 
-# Utwórz katalog roboczy
+# Pobranie i kompilacja Redis
+RUN wget http://download.redis.io/releases/redis-5.0.14.tar.gz && \
+    tar xzf redis-5.0.14.tar.gz && \
+    cd redis-5.0.14 && \
+    make && \
+    make install
+
+# Skopiowanie skryptów testowych do obrazu
+COPY tests /app/tests
+
+# Ustawienie katalogu roboczego
 WORKDIR /app
 
-# Skopiuj wszystkie pliki aplikacji (w tym katalogi tests i support) do kontenera
-COPY . /app
-
-# Uruchom Redis i testy
-CMD ["sh", "-c", "redis-server --daemonize yes && cd /app/ && ./runtest --single /unit/type/hash-field-expire"]
+# Komenda domyślna
+CMD ["redis-server"]
