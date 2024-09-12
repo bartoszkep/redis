@@ -1,8 +1,8 @@
-# Dockerfile
-FROM redis:latest
+FROM buildpack-deps:buster
 
-# Expose default Redis port
-EXPOSE 6379
-
-# Command to run Redis server
-CMD ["redis-server"]
+# Instalacja zależności do kompilacji Redis
+RUN apt-get update && apt-get install -y \
+    tcl \
+    build-essential \
+    autoconf \
+    libjemalloc-dev
