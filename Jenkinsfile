@@ -7,5 +7,11 @@ pipeline {
       }
     }
 
+    stage('Test') {
+      steps {
+        sh 'docker run --rm myapp:latest /bin/bash -c "cd /app && ./run_tests.sh"'
+      }
+    }
+
   }
 }
