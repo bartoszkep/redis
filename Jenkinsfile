@@ -9,7 +9,7 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'docker run --rm myapp:latest /bin/bash -c "cd /app && ./run_tests.sh"'
+        sh 'docker run --rm builddependencies:latest /bin/bash -c "cd /app && ./run_tests.sh"'
       }
     }
 
