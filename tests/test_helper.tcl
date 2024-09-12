@@ -9,7 +9,7 @@
 package require Tcl 8.5
 
 set tcl_precision 17
-source support/redis.tcl
+source tests/support/redis.tcl
 source tests/support/aofmanifest.tcl
 source tests/support/server.tcl
 source tests/support/cluster_util.tcl
