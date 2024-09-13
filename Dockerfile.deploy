@@ -1,17 +1,14 @@
-# Użyjemy poprzednio zbudowanego obrazu builddependencies jako podstawy
-FROM builddependencies AS build
+# Używamy obrazu builddependencies do budowy aplikacji
+FROM builddependencies
 
-# Skopiowanie plików źródłowych do obrazu
+# Skopiowanie wszystkich plików źródłowych do obrazu
 COPY . /app
 
-# Ustawienie katalogu roboczego na folder z projektem
+# Ustawienie katalogu roboczego
 WORKDIR /app/redis
 
-# Budowanie aplikacji (kompilacja)
-RUN make
+# Pobranie zależności i kompilacja aplikacji
+RUN make distclean && make deps && make
 
-# Tworzenie czystego obrazu na deploy
-FROM debian:stable-slim
-
-# Skopiowanie jedynie skompilowanej aplikacji z poprzedniego etapu
-COPY --from=build /app/redis/src/redis-server /usr/local/bin/redis
+# Ustawienie domyślnej komendy na zakończenie
+CMD ["echo", "Application built successfully"]
