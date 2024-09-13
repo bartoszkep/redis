@@ -11,12 +11,10 @@ pipeline {
       steps {
         script {
           sh '''
-docker run --rm builddependencies
-'''
+            docker run --rm builddependencies
+          '''
         }
-
       }
     }
-
   }
 }
