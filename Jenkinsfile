@@ -1,6 +1,5 @@
 pipeline {
   agent any
-
   stages {
     stage('Build') {
       steps {
@@ -13,6 +12,7 @@ pipeline {
         script {
           sh 'docker run --rm builddependencies'
         }
+
       }
     }
 
@@ -21,6 +21,7 @@ pipeline {
         script {
           sh 'docker build -t deployable -f Dockerfile.deploy .'
         }
+
       }
     }
 
@@ -41,7 +42,9 @@ pipeline {
             sh 'docker push bartekkep/deployable:latest'
           }
         }
+
       }
     }
+
   }
 }
