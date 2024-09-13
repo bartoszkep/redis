@@ -12,6 +12,7 @@ pipeline {
         script {
           sh 'docker run --rm builddependencies'
         }
+
       }
     }
 
@@ -20,13 +21,13 @@ pipeline {
         script {
           sh 'docker build -t deployable -f Dockerfile.deploy .'
         }
+
       }
     }
 
     stage('Publish') {
       steps {
         script {
-          // Logowanie do Docker Huba
           withDockerRegistry([credentialsId: 'dockerhub-redis', url: '']) {
             // Tagowanie obrazu
             sh 'docker tag deployable bartekkep/deployable:latest'
@@ -34,7 +35,9 @@ pipeline {
             sh 'docker push bartekkep/deployable:latest'
           }
         }
+
       }
     }
+
   }
 }
