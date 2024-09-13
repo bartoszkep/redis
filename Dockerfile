@@ -39,5 +39,4 @@ COPY --from=build /app/redis/src /app/src
 WORKDIR /app/redis
 
 # Uruchomienie Redis i testów w jednym kroku
-ENTRYPOINT ["sh", "-c", "./runtest --single unit/type/hash-field-expire
-"]
+ENTRYPOINT ["sh", "-c", "./runtest --single unit/type/hash-field-expire"]
