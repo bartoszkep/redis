@@ -33,4 +33,4 @@ COPY --from=build /app/redis/tests /app/tests
 WORKDIR /app/tests
 
 # Uruchomienie Redis i testów w jednym kroku
-ENTRYPOINT ["sh", "-c", "redis-server & cd /app/tests && tclsh test_helper.tcl"]
+ENTRYPOINT ["sh", "-c", "redis-server & cd /app && tclsh temp.tcl"]
