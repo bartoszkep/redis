@@ -1,14 +1,19 @@
-# Etap 1: Build
+# Etap 1: Build - kompilacja aplikacji
 FROM builddependencies as build
 
 # Kopiowanie plików źródłowych
 COPY . /app
 
-# Kompilacja aplikacji
+# Przechodzimy do katalogu z aplikacją
 WORKDIR /app/redis
+
+# Instalujemy brakujące zależności, np. Lua
+RUN apt-get update && apt-get install -y lua5.3 liblua5.3-dev
+
+# Kompilacja aplikacji
 RUN make
 
-# Etap 2: Runtime
+# Etap 2: Runtime - obraz produkcyjny
 FROM debian:bullseye-slim
 
 # Kopiowanie skompilowanego artefaktu z fazy builda
