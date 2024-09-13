@@ -35,4 +35,4 @@ COPY --from=build /app/redis/src /app/src
 WORKDIR /app
 
 # Uruchomienie Redis i testów w jednym kroku
-ENTRYPOINT ["sh", "-c", "redis-server & make test"]
+ENTRYPOINT ["sh", "-c", "redis-server & make -C src test"]
