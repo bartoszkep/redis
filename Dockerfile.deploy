@@ -1,17 +1,20 @@
 # Etap 1: Build - kompilacja aplikacji
-FROM builddependencies as build
+FROM debian:bullseye as build
 
-# Kopiowanie plików źródłowych
-COPY . /app
-
-# Przechodzimy do katalogu z aplikacją
-WORKDIR /app/redis
-
-# Instalujemy brakujące zależności, np. Lua
+# Instalowanie podstawowych narzędzi i zależności
 RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
     lua5.3 \
     liblua5.3-dev \
-    && rm -rf /var/lib/apt/lists/*  # Usuwamy niepotrzebne pliki po instalacji
+    && rm -rf /var/lib/apt/lists/*
+
+# Pobieranie kodu z repozytorium
+WORKDIR /app
+RUN git clone https://github.com/your-repo/your-project.git
+
+# Przechodzimy do katalogu z aplikacją
+WORKDIR /app/your-project/redis
 
 # Kompilacja aplikacji
 RUN make
@@ -22,10 +25,10 @@ FROM debian:bullseye-slim
 # Instalujemy ewentualne zależności potrzebne do uruchomienia aplikacji
 RUN apt-get update && apt-get install -y \
     liblua5.3 \
-    && rm -rf /var/lib/apt/lists/*  # Usuwamy niepotrzebne pliki po instalacji
+    && rm -rf /var/lib/apt/lists/*
 
 # Kopiowanie skompilowanego artefaktu z fazy builda
-COPY --from=build /app/redis /app/redis
+COPY --from=build /app/your-project/redis /app/redis
 
 # Ustawienie katalogu pracy
 WORKDIR /app/redis
