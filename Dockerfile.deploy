@@ -1,0 +1,36 @@
+# Etap budowy: budowanie aplikacji
+FROM buildpack-deps:buster AS build
+
+# Instalacja zależności potrzebnych do budowy
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    tcl \
+    lua5.3 \
+    liblua5.3-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists
+
+# Kopiowanie źródeł i budowanie aplikacji
+COPY . /app
+WORKDIR /app/redis
+RUN make
+
+# Etap produkcyjny: obraz runtime'owy
+FROM debian:buster-slim
+
+# Instalacja zależności runtime
+RUN apt-get update && apt-get install -y \
+    tcl \
+    lua5.3 \
+    liblua5.3-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists
+
+# Kopiowanie skompilowanych plików z etapu budowy
+COPY --from=build /app/redis/src/redis-server /usr/local/bin/redis-server
+
+# Ustawienie katalogu roboczego
+WORKDIR /app/redis
+
+# Ustawienie domyślnej komendy
+CMD ["redis-server"]
