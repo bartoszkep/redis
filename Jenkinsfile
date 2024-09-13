@@ -38,8 +38,4 @@ pipeline {
     }
 
   }
-  environment {
-    DOCKER_USERNAME = credentials('dockerhub-username')
-    DOCKER_PASSWORD = credentials('dockerhub-password')
-  }
 }
