@@ -1,14 +1,21 @@
-# Używamy obrazu builddependencies do budowy aplikacji
-FROM builddependencies
+# Etap 1: Build
+FROM builddependencies as build
 
-# Skopiowanie wszystkich plików źródłowych do obrazu
+# Kopiowanie plików źródłowych
 COPY . /app
 
-# Ustawienie katalogu roboczego
+# Kompilacja aplikacji
+WORKDIR /app/redis
+RUN make
+
+# Etap 2: Runtime
+FROM debian:bullseye-slim
+
+# Kopiowanie skompilowanego artefaktu z fazy builda
+COPY --from=build /app/redis /app/redis
+
+# Ustawienie katalogu pracy
 WORKDIR /app/redis
 
-# Pobranie zależności i kompilacja aplikacji
-RUN make distclean && make deps && make
-
-# Ustawienie domyślnej komendy na zakończenie
-CMD ["echo", "Application built successfully"]
+# Uruchomienie aplikacji
+CMD ["./redis-server"]
