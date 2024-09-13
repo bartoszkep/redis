@@ -12,9 +12,6 @@ RUN apt-get update && apt-get install -y \
     lua5.3 \
     liblua5.3-dev
 
-# Upewnienie się, że zainstalowana wersja TCL to 8.5 lub nowsza
-RUN apt-get update && install -y tcl8.6 tcl8.6-dev
-
 # Pobranie i kompilacja Redis
 RUN git clone https://github.com/redis/redis.git /app/redis
 WORKDIR /app/redis
