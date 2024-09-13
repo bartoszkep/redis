@@ -1,36 +1,23 @@
-# Etap budowy: budowanie aplikacji
-FROM buildpack-deps:buster AS build
+# Używamy wcześniejszego obrazu builddependencies
+FROM builddependencies AS build
 
-# Instalacja zależności potrzebnych do budowy
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    tcl \
-    lua5.3 \
-    liblua5.3-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists
-
-# Kopiowanie źródeł i budowanie aplikacji
+# Skopiowanie plików źródłowych do obrazu
 COPY . /app
+
+# Ustawienie katalogu roboczego na folder z projektem
 WORKDIR /app/redis
+
+# Budowa projektu za pomocą make (upewniamy się, że Makefile jest w odpowiednim miejscu)
 RUN make
 
-# Etap produkcyjny: obraz runtime'owy
-FROM debian:buster-slim
+# Tworzymy obraz produkcyjny, aby nie zawierał zbędnych artefaktów
+FROM debian:stable-slim
 
-# Instalacja zależności runtime
-RUN apt-get update && apt-get install -y \
-    tcl \
-    lua5.3 \
-    liblua5.3-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists
-
-# Kopiowanie skompilowanych plików z etapu budowy
+# Skopiowanie artefaktu (np. binarki) z poprzedniego etapu
 COPY --from=build /app/redis/src/redis-server /usr/local/bin/redis-server
 
-# Ustawienie katalogu roboczego
-WORKDIR /app/redis
+# Opcjonalne: skopiowanie pliku konfiguracyjnego Redis, jeśli jest wymagany
+# COPY --from=build /app/redis/redis.conf /usr/local/etc/redis/redis.conf
 
-# Ustawienie domyślnej komendy
+# Ustawienie komendy startowej
 CMD ["redis-server"]
