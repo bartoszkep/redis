@@ -8,13 +8,21 @@ COPY . /app
 WORKDIR /app/redis
 
 # Instalujemy brakujące zależności, np. Lua
-RUN apt-get update && apt-get install -y lua5.3 liblua5.3-dev
+RUN apt-get update && apt-get install -y \
+    lua5.3 \
+    liblua5.3-dev \
+    && rm -rf /var/lib/apt/lists/*  # Usuwamy niepotrzebne pliki po instalacji
 
 # Kompilacja aplikacji
 RUN make
 
 # Etap 2: Runtime - obraz produkcyjny
 FROM debian:bullseye-slim
+
+# Instalujemy ewentualne zależności potrzebne do uruchomienia aplikacji
+RUN apt-get update && apt-get install -y \
+    liblua5.3 \
+    && rm -rf /var/lib/apt/lists/*  # Usuwamy niepotrzebne pliki po instalacji
 
 # Kopiowanie skompilowanego artefaktu z fazy builda
 COPY --from=build /app/redis /app/redis
