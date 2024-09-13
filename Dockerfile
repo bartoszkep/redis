@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 
 # Pobranie i kompilacja Redis
 RUN git clone https://github.com/redis/redis.git /app/redis
-WORKDIR /app
+WORKDIR /app/redis
 RUN make
 
 # Etap końcowy: obraz, który będzie zawierał Redis i testy
@@ -36,7 +36,7 @@ COPY --from=build /app/redis/Makefile /app/Makefile
 COPY --from=build /app/redis/src /app/src
 
 # Ustawienie katalogu roboczego
-WORKDIR /app
+WORKDIR /app/redis
 
 # Uruchomienie Redis i testów w jednym kroku
 ENTRYPOINT ["sh", "-c", "./runtest --single unit/type/hash-field-expire
