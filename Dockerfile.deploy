@@ -1,4 +1,4 @@
-# Używamy wcześniejszego obrazu builddependencies
+# Użyjemy poprzednio zbudowanego obrazu builddependencies jako podstawy
 FROM builddependencies AS build
 
 # Skopiowanie plików źródłowych do obrazu
@@ -7,17 +7,11 @@ COPY . /app
 # Ustawienie katalogu roboczego na folder z projektem
 WORKDIR /app/redis
 
-# Budowa projektu za pomocą make (upewniamy się, że Makefile jest w odpowiednim miejscu)
+# Budowanie aplikacji (kompilacja)
 RUN make
 
-# Tworzymy obraz produkcyjny, aby nie zawierał zbędnych artefaktów
+# Tworzenie czystego obrazu na deploy
 FROM debian:stable-slim
 
-# Skopiowanie artefaktu (np. binarki) z poprzedniego etapu
-COPY --from=build /app/redis/src/redis-server /usr/local/bin/redis-server
-
-# Opcjonalne: skopiowanie pliku konfiguracyjnego Redis, jeśli jest wymagany
-# COPY --from=build /app/redis/redis.conf /usr/local/etc/redis/redis.conf
-
-# Ustawienie komendy startowej
-CMD ["redis-server"]
+# Skopiowanie jedynie skompilowanej aplikacji z poprzedniego etapu
+COPY --from=build /app/redis/src/redis-server /usr/local/bin/redis
