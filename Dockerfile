@@ -31,9 +31,9 @@ RUN apt-get update && apt-get install -y \
 
 # Kopiowanie skompilowanego Redis oraz testów
 COPY --from=build /app/redis/src/redis-server /usr/local/bin/redis-server
-COPY --from=build /app/redis/tests /app/tests
-COPY --from=build /app/redis/Makefile /app/Makefile
-COPY --from=build /app/redis/src /app/src
+COPY --from=build /app/redis/tests /app/redis/tests
+COPY --from=build /app/redis/Makefile /app/redis/Makefile
+COPY --from=build /app/redis/src /app/redis/src
 COPY --from=build /app/redis/runtest /app/redis/runtest
 
 # Ustawienie katalogu roboczego
