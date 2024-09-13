@@ -34,10 +34,17 @@ COPY --from=build /app/redis/src/redis-server /usr/local/bin/redis-server
 COPY --from=build /app/redis/tests /app/tests
 COPY --from=build /app/redis/Makefile /app/Makefile
 COPY --from=build /app/redis/src /app/src
+COPY --from=build /app/redis/runtest /app/redis/runtest
 
 # Ustawienie katalogu roboczego
 WORKDIR /app/redis
 
+# Dodanie uprawnień do wykonania dla runtest
+RUN chmod +x ./runtest
+
+# Skrypt powłoki do uruchomienia Redis i testów
+COPY run-tests.sh /run-tests.sh
+RUN chmod +x /run-tests.sh
+
 # Uruchomienie Redis i testów w jednym kroku
-# Użycie `sh -c` umożliwia uruchomienie wielu poleceń
-CMD ["./runtest --single unit/type/hash-field-expire"]
+ENTRYPOINT ["/run-tests.sh"]
