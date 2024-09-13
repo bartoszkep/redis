@@ -8,7 +8,9 @@ RUN apt-get update && apt-get install -y \
     autoconf \
     libjemalloc-dev \
     docker \
-    git
+    git \
+    lua5.3 \
+    liblua5.3-dev
 
 # Pobranie i kompilacja Redis
 RUN git clone https://github.com/redis/redis.git /app/redis
@@ -22,6 +24,8 @@ FROM buildpack-deps:buster
 RUN apt-get update && apt-get install -y \
     tcl \
     docker \
+    lua5.3 \
+    liblua5.3-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
