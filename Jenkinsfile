@@ -11,9 +11,7 @@ pipeline {
       steps {
         script {
           sh '''
-docker run --rm builddependencies
-
-cd /app/redis
+docker run builddependencies
 
 ./runtest --single unit/type/hash-field-expire
 '''
