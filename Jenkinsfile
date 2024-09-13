@@ -3,32 +3,18 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        script {
-          docker.build("${IMAGE_NAME}", "-f Dockerfile .")
-        }
-
+        sh 'docker build -t builddependencies .'
       }
     }
 
     stage('Test') {
       steps {
         script {
-          docker.image("${IMAGE_NAME}").inside {
-            sh './runtest --single unit/type/hash-field-expire'
-          }
+          sh '''
+            docker run --rm builddependencies
+          '''
         }
-
       }
     }
-
-  }
-  environment {
-    IMAGE_NAME = 'builddependencies'
-  }
-  post {
-    always {
-      cleanWs()
-    }
-
   }
 }
