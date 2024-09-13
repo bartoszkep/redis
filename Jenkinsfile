@@ -2,25 +2,26 @@ pipeline {
     agent any
 
     environment {
-        BUILD_IMAGE = "builddependencies"
-        DEPLOY_IMAGE = "deployable"
+        IMAGE_NAME = "builddependencies"
     }
 
     stages {
-        stage('Build Dependencies') {
+        stage('Build') {
             steps {
                 script {
-                    // Budujemy obraz Docker z Dockerfile dla zależności
-                    docker.build("${BUILD_IMAGE}", "-f Dockerfile .")
+                    // Budujemy obraz Docker
+                    docker.build("${IMAGE_NAME}", "-f Dockerfile .")
                 }
             }
         }
 
-        stage('Build Deployable Image') {
+        stage('Test') {
             steps {
                 script {
-                    // Budujemy obraz Docker z Dockerfile.deploy
-                    docker.build("${DEPLOY_IMAGE}", "-f Dockerfile.deploy .")
+                    // Uruchomienie testów (opcjonalne, w przypadku dodatkowych testów)
+                    docker.image("${IMAGE_NAME}").inside {
+                        sh './runtest --single unit/type/hash-field-expire'
+                    }
                 }
             }
         }
