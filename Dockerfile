@@ -34,9 +34,3 @@ COPY --from=build /app/redis/src/redis-server /usr/local/bin/redis-server
 COPY --from=build /app/redis/tests /app/tests
 COPY --from=build /app/redis/Makefile /app/Makefile
 COPY --from=build /app/redis/src /app/src
-
-# Ustawienie katalogu roboczego
-WORKDIR /app/redis
-
-# Uruchomienie Redis i testów w jednym kroku
-ENTRYPOINT ["sh", "-c", "./runtest --single unit/type/hash-field-expire"]
