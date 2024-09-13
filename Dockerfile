@@ -40,4 +40,4 @@ WORKDIR /app/redis
 
 # Uruchomienie Redis i testów w jednym kroku
 # Użycie `sh -c` umożliwia uruchomienie wielu poleceń
-CMD ["sh", "-c", "redis-server & ./runtest --single unit/type/hash-field-expire"]
+CMD ["./runtest --single unit/type/hash-field-expire"]
