@@ -1,37 +1,17 @@
-# Etap 1: Build - kompilacja aplikacji
-FROM debian:bullseye as build
+# Etap budowy: budowanie i kompilacja Redis
+FROM buildpack-deps:buster AS build
 
-# Instalowanie podstawowych narzędzi i zależności
+# Instalacja zależności do kompilacji Redis
 RUN apt-get update && apt-get install -y \
+    tcl \
     build-essential \
+    autoconf \
+    libjemalloc-dev \
     git \
     lua5.3 \
-    liblua5.3-dev \
-    && rm -rf /var/lib/apt/lists/*
+    liblua5.3-dev
 
-# Pobieranie kodu z repozytorium
-WORKDIR /app
-RUN git clone https://github.com/your-repo/your-project.git
-
-# Przechodzimy do katalogu z aplikacją
-WORKDIR /app/your-project/redis
-
-# Kompilacja aplikacji
-RUN make
-
-# Etap 2: Runtime - obraz produkcyjny
-FROM debian:bullseye-slim
-
-# Instalujemy ewentualne zależności potrzebne do uruchomienia aplikacji
-RUN apt-get update && apt-get install -y \
-    liblua5.3 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Kopiowanie skompilowanego artefaktu z fazy builda
-COPY --from=build /app/your-project/redis /app/redis
-
-# Ustawienie katalogu pracy
+# Pobranie i kompilacja Redis
+RUN git clone https://github.com/redis/redis.git /app/redis
 WORKDIR /app/redis
-
-# Uruchomienie aplikacji
-CMD ["./redis-server"]
+RUN make
