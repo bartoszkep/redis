@@ -28,9 +28,11 @@ RUN apt-get update && apt-get install -y \
 # Kopiowanie skompilowanego Redis oraz testów
 COPY --from=build /app/redis/src/redis-server /usr/local/bin/redis-server
 COPY --from=build /app/redis/tests /app/tests
+COPY --from=build /app/redis/Makefile /app/Makefile
+COPY --from=build /app/redis/src /app/src
 
 # Ustawienie katalogu roboczego
-WORKDIR /app/tests
+WORKDIR /app
 
 # Uruchomienie Redis i testów w jednym kroku
-ENTRYPOINT ["sh", "-c", "redis-server & cd /app && tclsh temp.tcl"]
+ENTRYPOINT ["sh", "-c", "redis-server & make test"]
