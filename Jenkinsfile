@@ -1,23 +1,30 @@
 pipeline {
-  agent any
-  stages {
-    stage('Build') {
-      steps {
-        sh 'docker build -t builddependencies .'
-      }
-    }
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    sh 'docker build -t redis-build -f Dockerfile .'
+                }
+            }
+        }
 
-    stage('Test') {
-      steps {
-        sh 'docker run --rm builddependencies'
-      }
-    }
+        stage('Test') {
+            steps {
+                script {
+                    sh '''
+                        docker run --rm redis-build
+                    '''
+                }
+            }
+        }
 
-    stage('Deploy') {
-      steps {
-        sh 'docker build -t deployable -f Dockerfile.deploy .'
-      }
+        stage('Deploy') {
+            steps {
+                script {
+                    sh 'docker build -t redis-deploy -f Dockerfile.deploy .'
+                }
+            }
+        }
     }
-
-  }
 }
