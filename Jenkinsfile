@@ -19,7 +19,7 @@ pipeline {
     stage('Deploy') {
       steps {
         script {
-          sh 'docker build -t deployable -f Dockerfile.deploy .'
+          sh 'docker build -t deployable -f Dockerfile.runtime .'
         }
 
       }
